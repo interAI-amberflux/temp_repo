@@ -31,14 +31,14 @@ class Organization(Base):
     name = Column(String, unique=True, nullable=False)
     createdAt = Column(DateTime(timezone=True), server_default=func.now())
 
-    users = relationship("OrgUser", back_populates="organization")
+    users = relationship("OrgUser", back_populates="organization", cascade="all, delete", passive_deletes=True)
     meetings = relationship("Meeting", back_populates="organization")
 
 class OrgUser(Base):
     __tablename__ = "org_users"
 
     id = Column(String, primary_key=True, index=True)
-    organizationId = Column(String, ForeignKey("organizations.id"), nullable=False)
+    organizationId = Column(String, ForeignKey("organizations.id" , ondelete="CASCADE"), nullable=False)
     email = Column(String, unique=True, nullable=False)
     name = Column(String, nullable=False)
     role = Column(Enum(Role), nullable=False)
